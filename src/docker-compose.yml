@@ -1,0 +1,6 @@
+services:
+  milano.distributedcache.server:
+    image: ${DOCKER_REGISTRY-}milanodistributedcacheserver
+    build:
+      context: MILANO.DistributedCache.Server
+      dockerfile: Dockerfile

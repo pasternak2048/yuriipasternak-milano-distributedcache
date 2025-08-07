@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+option csharp_namespace = "MILANO.DistributedCache.Server.Web.Grpc";
+
+service CacheService {
+  rpc Get (GrpcCacheGetRequest) returns (GrpcCacheGetResponse);
+  rpc Set (GrpcCacheSetRequest) returns (GrpcCacheSetResponse);
+  rpc Remove (GrpcCacheRemoveRequest) returns (GrpcCacheRemoveResponse);
+  rpc Exists (GrpcCacheExistsRequest) returns (GrpcCacheExistsResponse);
+  rpc Count (GrpcCacheCountRequest) returns (GrpcCacheCountResponse);
+  rpc Dump (GrpcCacheDumpRequest) returns (GrpcCacheDumpResponse);
+}
+
+message GrpcCacheGetRequest {
+  string key = 1;
+  string apiKey = 2;
+}
+
+message GrpcCacheGetResponse {
+  string key = 1;
+  string value = 2;
+  bool found = 3;
+}
+
+message GrpcCacheSetRequest {
+  string key = 1;
+  string value = 2;
+  string apiKey = 3;
+  int32 expirationSeconds = 4;
+}
+
+message GrpcCacheSetResponse {
+  bool success = 1;
+}
+
+message GrpcCacheRemoveRequest {
+  string key = 1;
+  string apiKey = 2;
+}
+
+message GrpcCacheRemoveResponse {
+  bool success = 1;
+}
+
+message GrpcCacheExistsRequest {
+  string key = 1;
+  string apiKey = 2;
+}
+
+message GrpcCacheExistsResponse {
+  bool exists = 1;
+}
+
+message GrpcCacheCountRequest {
+  string apiKey = 1;
+}
+
+message GrpcCacheCountResponse {
+  int32 count = 1;
+}
+
+message GrpcCacheDumpRequest {
+  bool includeExpired = 1;
+  string apiKey = 2;
+}
+
+message GrpcCacheDumpResponse {
+  map<string, string> entries = 1;
+}
