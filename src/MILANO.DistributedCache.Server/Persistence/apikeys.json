@@ -1,0 +1,12 @@
+[
+  {
+	"key": "test-key-full-access",
+	"label": "Test Full Access Key",
+	"permissions": [ "get", "set" ]
+  },
+  {
+	"key": "readonly-key",
+	"label": "Read-Only Key",
+	"permissions": [ "get" ]
+  }
+]

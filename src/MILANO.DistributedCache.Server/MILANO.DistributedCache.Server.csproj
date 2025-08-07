@@ -7,15 +7,21 @@
     <UserSecretsId>b3bb7455-4b46-4f9e-a192-c29347207cbd</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <Folder Include="Persistence\" />
+    <Folder Include="Web\Protos\" />
+  </ItemGroup>
+  <ItemGroup>
+	<Protobuf Include="Web\Protos\cache.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

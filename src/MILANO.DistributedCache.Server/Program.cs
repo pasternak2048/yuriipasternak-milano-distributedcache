@@ -1,25 +1,34 @@
+using MILANO.DistributedCache.Server.Web.Extensions;
+using MILANO.DistributedCache.Server.Web.Grpc;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add core services, options, and DI bindings
+builder.Services.AddMilanoDistributedCache(builder.Configuration);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Grcp
+builder.Services.AddGrpc();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger UI (dev only)
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Middleware: API Key auth per route
+app.UseRouting();
+app.UseMilanoMiddleware();
 
-app.UseAuthorization();
+// Endpoints: controllers + system endpoints
+app.MapMilanoEndpoints();
 
-app.MapControllers();
+app.MapGrpcService<CacheGrpcService>();
 
 app.Run();
