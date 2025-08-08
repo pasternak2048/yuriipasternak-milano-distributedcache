@@ -1,4 +1,5 @@
-﻿using MILANO.DistributedCache.Server.Application.Cache;
+﻿using Microsoft.Extensions.Caching.Memory;
+using MILANO.DistributedCache.Server.Application.Cache;
 using MILANO.DistributedCache.Server.Application.Security;
 using MILANO.DistributedCache.Server.Infrastructure.Cache;
 using MILANO.DistributedCache.Server.Infrastructure.Options;
@@ -26,7 +27,17 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 
 			// Core services
 			services.AddSingleton<ICacheService, InMemoryCacheService>();
-			services.AddScoped<IApiKeyStore, FileApiKeyStore>();
+			services.AddMemoryCache();
+			services.AddSingleton<FileApiKeyStore>();
+			services.AddSingleton<IApiKeyStore>(sp =>
+			{
+				var fileStore = sp.GetRequiredService<FileApiKeyStore>();
+				var cache = sp.GetRequiredService<IMemoryCache>();
+				var logger = sp.GetRequiredService<ILogger<CachedApiKeyStore>>();
+
+				return new CachedApiKeyStore(fileStore, cache, logger);
+			});
+
 			services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
 
 			// Controllers and filters
