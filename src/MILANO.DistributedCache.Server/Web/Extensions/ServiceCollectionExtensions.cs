@@ -5,6 +5,7 @@ using MILANO.DistributedCache.Server.Infrastructure.Cache;
 using MILANO.DistributedCache.Server.Infrastructure.Options;
 using MILANO.DistributedCache.Server.Infrastructure.Security;
 using MILANO.DistributedCache.Server.Web.Filters;
+using MILANO.DistributedCache.Server.Web.Grpc;
 
 namespace MILANO.DistributedCache.Server.Web.Extensions
 {
@@ -39,6 +40,13 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 			});
 
 			services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
+
+			// Grcp
+			services.AddScoped<GrpcPermissionInterceptor>();
+			services.AddGrpc(options =>
+			{
+				options.Interceptors.Add<GrpcPermissionInterceptor>();
+			});
 
 			// Controllers and filters
 			services.AddControllers(options =>
