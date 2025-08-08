@@ -21,10 +21,10 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 			string httpMethod,
 			string requiredPermission)
 		{
-			app.UseWhen(
+			app.UseWhen( 
 				context =>
-					context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase) &&
-					context.Request.Method.Equals(httpMethod, StringComparison.OrdinalIgnoreCase),
+				context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase) &&
+				context.Request.Method.Equals(httpMethod, StringComparison.OrdinalIgnoreCase),
 				appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>(requiredPermission));
 
 			return app;

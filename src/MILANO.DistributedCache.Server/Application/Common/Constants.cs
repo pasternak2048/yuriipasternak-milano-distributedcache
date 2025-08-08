@@ -40,6 +40,7 @@
 		public static class Metadata
 		{
 			public const string ApiKeyContextItem = "MILANO:ApiKeyContext";
+			public const string CacheApiKey = "apikeys_cache";
 		}
 	}
 }
