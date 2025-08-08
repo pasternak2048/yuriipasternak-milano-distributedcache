@@ -10,9 +10,6 @@ builder.Services.AddMilanoDistributedCache(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Grcp
-builder.Services.AddGrpc();
-
 var app = builder.Build();
 
 // Swagger UI (dev only)
