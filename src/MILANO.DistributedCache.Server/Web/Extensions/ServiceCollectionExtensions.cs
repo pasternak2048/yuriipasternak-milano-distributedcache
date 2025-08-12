@@ -26,32 +26,35 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 			services.Configure<CacheOptions>(configuration.GetSection("Cache"));
 			services.Configure<ApiKeyStoreOptions>(configuration.GetSection("ApiKeyStore"));
 
-			// Core services
-			services.AddSingleton<ICacheService, InMemoryCacheService>();
+			// Cache
 			services.AddMemoryCache();
+			services.AddSingleton<ExpiredEntryCollection>();
+			services.AddSingleton<InMemoryCacheService>();
+			services.AddSingleton<ICacheService>(sp => sp.GetRequiredService<InMemoryCacheService>());
+			services.AddHostedService<BackgroundCleanupService>();
+
+			// API key store and validation
 			services.AddSingleton<FileApiKeyStore>();
-			services.AddSingleton<IApiKeyStore>(sp =>
+			services.AddSingleton<CachedApiKeyStore>(sp =>
 			{
 				var fileStore = sp.GetRequiredService<FileApiKeyStore>();
 				var cache = sp.GetRequiredService<IMemoryCache>();
 				var logger = sp.GetRequiredService<ILogger<CachedApiKeyStore>>();
-
 				return new CachedApiKeyStore(fileStore, cache, logger);
 			});
-
+			services.AddSingleton<IApiKeyStore>(sp => sp.GetRequiredService<CachedApiKeyStore>());
 			services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
 
-			// Grcp
+			// gRPC
 			services.AddScoped<GrpcPermissionInterceptor>();
 			services.AddGrpc(options =>
 			{
 				options.Interceptors.Add<GrpcPermissionInterceptor>();
 			});
 
-			// Controllers and filters
+			// Controllers
 			services.AddControllers(options =>
 			{
-				// Optional: add global filters like exception handling
 				options.Filters.Add<ApiExceptionFilter>();
 			});
 
