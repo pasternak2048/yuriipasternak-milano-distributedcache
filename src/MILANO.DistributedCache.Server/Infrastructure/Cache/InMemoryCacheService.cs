@@ -44,7 +44,8 @@ namespace MILANO.DistributedCache.Server.Infrastructure.Cache
 				}
 				else
 				{
-					Remove(request.Key);
+					// Use internal async removal
+					_ = RemoveAsync(request.Key);
 				}
 			}
 
@@ -105,25 +106,12 @@ namespace MILANO.DistributedCache.Server.Infrastructure.Cache
 		/// </summary>
 		public Task<bool> RemoveAsync(string key)
 		{
-			var result = Remove(key);
-			return Task.FromResult(result);
-		}
-
-		/// <summary>
-		/// Removes a key directly from the store, regardless of TTL.
-		/// Used by background cleanup to evict expired entries.
-		/// </summary>
-		public bool Remove(string key)
-		{
-			if (_store.TryRemove(key, out var removedEntry) && removedEntry != null)
+			var removed = _store.TryRemove(key, out var entry);
+			if (removed)
 			{
-				if (!removedEntry.IsExpired(DateTimeOffset.UtcNow))
-				{
-					Interlocked.Decrement(ref _validCount);
-				}
-				return true;
+				Interlocked.Decrement(ref _validCount);
 			}
-			return false;
+			return Task.FromResult(removed);
 		}
 
 		/// <summary>

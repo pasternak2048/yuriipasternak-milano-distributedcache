@@ -29,8 +29,20 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 			// Cache
 			services.AddMemoryCache();
 			services.AddSingleton<ExpiredEntryCollection>();
-			services.AddSingleton<InMemoryCacheService>();
-			services.AddSingleton<ICacheService>(sp => sp.GetRequiredService<InMemoryCacheService>());
+			services.AddSingleton<IShardingStrategy, HashModuloShardingStrategy>();
+
+			services.AddSingleton<ICacheService>(provider =>
+			{
+				var expiredEntries = provider.GetRequiredService<ExpiredEntryCollection>();
+				var strategy = provider.GetRequiredService<IShardingStrategy>();
+				var shardCount = 4;
+
+				return new ShardedCacheService(
+					shardCount,
+					shardIndex => new InMemoryCacheService(expiredEntries, maxPayloadSizeBytes: 1_000_000),
+					strategy
+				);
+			});
 			services.AddHostedService<BackgroundCleanupService>();
 
 			// API key store and validation
