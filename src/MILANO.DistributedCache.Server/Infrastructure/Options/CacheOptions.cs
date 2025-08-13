@@ -20,5 +20,10 @@
 		/// Gets or sets whether expired entries should be automatically cleaned up.
 		/// </summary>
 		public bool EnableAutoCleanup { get; set; } = false;
+
+		/// <summary>
+		/// Gets or sets the number of shards for the distributed cache.
+		/// </summary>
+		public int ShardCount { get; set; } = 4;
 	}
 }
