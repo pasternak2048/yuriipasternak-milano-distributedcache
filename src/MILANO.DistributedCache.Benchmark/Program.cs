@@ -76,17 +76,18 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 			int iterations = totalRequests / concurrency;
 			for (int j = 0; j < iterations; j++)
 			{
-				var key = $"key_{taskNum}_{j}";
-				var valueBytes = ByteString.CopyFromUtf8($"value_{taskNum}_{j}");
+				var key = $"key_{index}{taskNum}_{j}{DateTime.UtcNow.Ticks}";
+				var value = $"value_{index}{taskNum}_{j}{DateTime.UtcNow.Ticks}";
 				try
 				{
 					var localSw = Stopwatch.StartNew();
-					await client.SetAsync(new GrpcCacheSetRequest { Key = key, Value = valueBytes, ApiKey = apiKey, ExpirationSeconds = 60 }, metadata);
+					await client.SetAsync(new GrpcCacheSetRequest { Key = key, Value = value, ApiKey = apiKey, ExpirationSeconds = 60 }, metadata);
+					//await Task.Delay(1);
 					var response = await client.GetAsync(new GrpcCacheGetRequest { Key = key, ApiKey = apiKey }, metadata);
 					localSw.Stop();
 
 					timings.Add(localSw.Elapsed.TotalMilliseconds);
-					bool ok = response.Found && response.Value.Equals(valueBytes);
+					bool ok = response.Found && response.Value.Equals(value);
 					if (!ok)
 					{
 						errorDetails.Add($"MISMATCH: {key}");

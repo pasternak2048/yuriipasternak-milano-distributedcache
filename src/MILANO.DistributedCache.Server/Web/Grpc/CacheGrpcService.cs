@@ -26,7 +26,7 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 			return new GrpcCacheGetResponse
 			{
 				Key = result.Key,
-				Value = ByteString.CopyFromUtf8(result.Value ?? string.Empty),
+				Value = result.Value ?? string.Empty,
 				Found = result.Found
 			};
 		}
@@ -81,7 +81,7 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 		private static CacheSetRequest ToAppRequest(GrpcCacheSetRequest grpcRequest) => new()
 		{
 			Key = grpcRequest.Key,
-			Value = grpcRequest.Value.ToStringUtf8(),
+			Value = grpcRequest.Value,
 			ExpirationSeconds = grpcRequest.ExpirationSeconds
 		};
 	}
