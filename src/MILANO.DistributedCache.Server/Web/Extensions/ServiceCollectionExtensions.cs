@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using MILANO.DistributedCache.Server.Application.Cache;
 using MILANO.DistributedCache.Server.Application.Security;
 using MILANO.DistributedCache.Server.Infrastructure.Cache;
@@ -23,7 +24,7 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 		public static IServiceCollection AddMilanoDistributedCache(this IServiceCollection services, IConfiguration configuration)
 		{
 			// Options
-			services.Configure<CacheOptions>(configuration.GetSection("Cache"));
+			services.Configure<CacheOptions>(configuration.GetSection("CacheOptions"));
 			services.Configure<ApiKeyStoreOptions>(configuration.GetSection("ApiKeyStore"));
 
 			// Cache
@@ -35,11 +36,14 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 			{
 				var expiredEntries = provider.GetRequiredService<ExpiredEntryCollection>();
 				var strategy = provider.GetRequiredService<IShardingStrategy>();
-				var shardCount = 4;
+				var options = provider.GetRequiredService<IOptions<CacheOptions>>().Value;
+
+				var shardCount = options.ShardCount;
+				var payloadLimit = options.MaxPayloadSizeBytes;
 
 				return new ShardedCacheService(
 					shardCount,
-					shardIndex => new InMemoryCacheService(expiredEntries, maxPayloadSizeBytes: 1_000_000),
+					shardIndex => new InMemoryCacheService(expiredEntries, payloadLimit),
 					strategy
 				);
 			});
