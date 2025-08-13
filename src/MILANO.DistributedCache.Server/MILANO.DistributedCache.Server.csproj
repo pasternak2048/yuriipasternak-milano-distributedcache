@@ -21,7 +21,7 @@
     <Folder Include="Web\Protos\" />
   </ItemGroup>
   <ItemGroup>
-	<Protobuf Include="Web\Protos\cache.proto" GrpcServices="Server" />
+	<Protobuf Include="Web\Protos\cache.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

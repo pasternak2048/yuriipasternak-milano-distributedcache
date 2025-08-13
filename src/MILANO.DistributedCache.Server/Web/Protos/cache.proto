@@ -18,13 +18,13 @@ message GrpcCacheGetRequest {
 
 message GrpcCacheGetResponse {
   string key = 1;
-  string value = 2;
+  bytes value = 2;
   bool found = 3;
 }
 
 message GrpcCacheSetRequest {
   string key = 1;
-  string value = 2;
+  bytes value = 2;
   string apiKey = 3;
   int32 expirationSeconds = 4;
 }

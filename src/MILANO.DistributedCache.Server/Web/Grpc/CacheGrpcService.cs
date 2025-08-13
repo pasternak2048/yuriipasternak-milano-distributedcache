@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf;
+using Grpc.Core;
 using MILANO.DistributedCache.Server.Application.Cache;
 using MILANO.DistributedCache.Server.Application.Cache.Dto;
 using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
@@ -25,7 +26,7 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 			return new GrpcCacheGetResponse
 			{
 				Key = result.Key,
-				Value = result.Value ?? string.Empty,
+				Value = ByteString.CopyFromUtf8(result.Value ?? string.Empty),
 				Found = result.Found
 			};
 		}
@@ -80,7 +81,7 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 		private static CacheSetRequest ToAppRequest(GrpcCacheSetRequest grpcRequest) => new()
 		{
 			Key = grpcRequest.Key,
-			Value = grpcRequest.Value,
+			Value = grpcRequest.Value.ToStringUtf8(),
 			ExpirationSeconds = grpcRequest.ExpirationSeconds
 		};
 	}
