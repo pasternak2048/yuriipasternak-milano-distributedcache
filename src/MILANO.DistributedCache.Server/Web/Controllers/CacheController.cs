@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Cache.Dto;
 using MILANO.DistributedCache.Server.Application.Common;
 using MILANO.DistributedCache.Server.Web.Context;
+using MILANO.DistributedCache.Shared.Dtos.Cache;
 
 namespace MILANO.DistributedCache.Server.Web.Controllers
 {

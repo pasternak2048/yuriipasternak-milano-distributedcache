@@ -1,8 +1,8 @@
-﻿using Google.Protobuf;
-using Grpc.Core;
+﻿using Grpc.Core;
 using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Cache.Dto;
 using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
+using MILANO.DistributedCache.Shared.Dtos.Cache;
+using MILANO.DistributedCache.Shared.Protos;
 
 
 namespace MILANO.DistributedCache.Server.Web.Grpc

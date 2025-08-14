@@ -1,6 +1,6 @@
 ﻿using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Cache.Dto;
 using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
+using MILANO.DistributedCache.Shared.Dtos.Cache;
 using System.Collections.Concurrent;
 
 namespace MILANO.DistributedCache.Server.Infrastructure.Cache

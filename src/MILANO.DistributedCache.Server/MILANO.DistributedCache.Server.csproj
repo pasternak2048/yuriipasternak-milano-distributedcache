@@ -12,16 +12,24 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Persistence\" />
-    <Folder Include="Web\Protos\" />
   </ItemGroup>
+
   <ItemGroup>
-	<Protobuf Include="Web\Protos\cache.proto" GrpcServices="Both" />
+	<Protobuf Include="..\MILANO.DistributedCache.Shared\Protos\cache.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MILANO.DistributedCache.Shared\MILANO.DistributedCache.Shared.csproj" />
   </ItemGroup>
 
 </Project>
