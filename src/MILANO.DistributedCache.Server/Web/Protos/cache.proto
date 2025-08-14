@@ -13,7 +13,6 @@ service CacheService {
 
 message GrpcCacheGetRequest {
   string key = 1;
-  string apiKey = 2;
 }
 
 message GrpcCacheGetResponse {
@@ -25,8 +24,7 @@ message GrpcCacheGetResponse {
 message GrpcCacheSetRequest {
   string key = 1;
   string value = 2;
-  string apiKey = 3;
-  int32 expirationSeconds = 4;
+  int32 expirationSeconds = 3;
 }
 
 message GrpcCacheSetResponse {
@@ -35,7 +33,6 @@ message GrpcCacheSetResponse {
 
 message GrpcCacheRemoveRequest {
   string key = 1;
-  string apiKey = 2;
 }
 
 message GrpcCacheRemoveResponse {
@@ -44,7 +41,6 @@ message GrpcCacheRemoveResponse {
 
 message GrpcCacheExistsRequest {
   string key = 1;
-  string apiKey = 2;
 }
 
 message GrpcCacheExistsResponse {
@@ -52,7 +48,6 @@ message GrpcCacheExistsResponse {
 }
 
 message GrpcCacheCountRequest {
-  string apiKey = 1;
 }
 
 message GrpcCacheCountResponse {
@@ -61,7 +56,6 @@ message GrpcCacheCountResponse {
 
 message GrpcCacheDumpRequest {
   bool includeExpired = 1;
-  string apiKey = 2;
 }
 
 message GrpcCacheDumpResponse {
