@@ -1,5 +1,4 @@
-﻿using Google.Protobuf;
-using Grpc.Core;
+﻿using Grpc.Core;
 using Grpc.Net.Client;
 using MILANO.DistributedCache.Server.Web.Grpc;
 using System.Collections.Concurrent;
@@ -115,14 +114,17 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 	double min = ordered.Min();
 	double median = ordered[ordered.Length / 2];
 	double p99 = ordered[(int)(ordered.Length * 0.99)];
-	int slow = ordered.Count(x => x > 100);
+	int moreThan100ms = ordered.Count(x => x > 100);
+	int moreThan50ms = ordered.Count(x => x > 50);
+	int moreThan10ms = ordered.Count(x => x > 10);
+	int moreThan1ms = ordered.Count(x => x > 1);
 	double rps = totalRequests / elapsed.TotalSeconds;
 
 	PrintReportHeader();
 	Console.WriteLine();
-	PrintEnhancedReport(elapsed, totalRequests, concurrency, avg, max, min, median, p99, slow, rps, errorCount, errorDetails, ordered.Length);
+	PrintEnhancedReport(elapsed, totalRequests, concurrency, avg, max, min, median, p99, moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms, rps, errorCount, errorDetails, ordered.Length);
 
-	return new RunResult(index, elapsed, avg, max, min, median, p99, slow, rps, errorCount);
+	return new RunResult(index, elapsed, avg, max, min, median, p99, moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms, rps, errorCount);
 }
 
 // === OUTPUT HELPERS ===
@@ -178,7 +180,7 @@ int GetVisualLength(string input)
 
 bool IsWideChar(char c) => c >= 0x1100;
 
-void PrintEnhancedReport(TimeSpan totalTime, int totalRequests, int concurrency, double avgMs, double maxMs, double minMs, double median, double p99, int slow, double rps, int errorCount, ConcurrentBag<string> errorDetails, int totalTimings)
+void PrintEnhancedReport(TimeSpan totalTime, int totalRequests, int concurrency, double avgMs, double maxMs, double minMs, double median, double p99, int moreThan100ms, int moreThan50ms, int moreThan10ms, int moreThan1ms, double rps, int errorCount, ConcurrentBag<string> errorDetails, int totalTimings)
 {
 	Console.WriteLine($"\n🔢 Total Requests:     {totalRequests:N0}");
 	Console.WriteLine($"🧵 Concurrency Level:  {concurrency}");
@@ -192,8 +194,24 @@ void PrintEnhancedReport(TimeSpan totalTime, int totalRequests, int concurrency,
 
 	Console.WriteLine($"📉 Median Time:        {median:F3} ms");
 	Console.WriteLine($"💎 99th Percentile:    {p99:F3} ms");
-	Console.ForegroundColor = slow > 0 ? ConsoleColor.Yellow : ConsoleColor.Green;
-	Console.WriteLine($"🐢 > 100ms requests:   {slow} ({(slow * 100.0 / totalTimings):F2}%)");
+
+	Console.ForegroundColor = moreThan100ms > 0 ? ConsoleColor.Yellow : ConsoleColor.Green;
+	Console.ForegroundColor = moreThan50ms > 0 ? ConsoleColor.Yellow : ConsoleColor.Green;
+	Console.ForegroundColor = moreThan10ms > 0 ? ConsoleColor.Yellow : ConsoleColor.Green;
+	Console.ForegroundColor = moreThan1ms > 0 ? ConsoleColor.Yellow : ConsoleColor.Green;
+
+	if (totalTimings > 0)
+	{
+		Console.WriteLine($"🐢 > 100ms requests:  {moreThan100ms} ({(moreThan100ms * 100.0 / totalTimings):F2}%)");
+		Console.WriteLine($"🐢 > 50ms  requests:  {moreThan50ms} ({(moreThan50ms * 100.0 / totalTimings):F2}%)");
+		Console.WriteLine($"🐢 > 10ms  requests:  {moreThan10ms} ({(moreThan10ms * 100.0 / totalTimings):F2}%)");
+		Console.WriteLine($"🐢 > 1ms   requests:  {moreThan1ms} ({(moreThan1ms * 100.0 / totalTimings):F2}%)");
+	}
+	else 
+	{
+		Console.WriteLine("No timings recorded.");
+	}
+
 	Console.ResetColor();
 	Console.ForegroundColor = ConsoleColor.Green;
 	Console.WriteLine($"📈 Throughput:         {rps:N0} req/sec");
@@ -215,18 +233,18 @@ void PrintEnhancedReport(TimeSpan totalTime, int totalRequests, int concurrency,
 
 void PrintSummaryTable(List<RunResult> results)
 {
-	Console.WriteLine("\n════════════════════ 📊 Summary Table 📊 ═════════════════════════════════════════════════");
-	Console.WriteLine("│ Run │   Time   │ Avg (ms) │ Max (ms) │ Min (ms) │ P99 (ms) │ >100ms │ Errors │   RPS   │");
-	Console.WriteLine("├─────┼──────────┼──────────┼──────────┼──────────┼──────────┼────────┼────────┼─────────┤");
+	Console.WriteLine("\n════════════════════ 📊 Summary Table 📊 ════════════════════════════════════════════════════════════════════════════");
+	Console.WriteLine("│ Run │   Time   │ Avg (ms) │ Max (ms) │ Min (ms) │ P99 (ms) │ >100ms │ >50ms  │ >10ms  │ >1ms   │ Errors │   RPS   │");
+	Console.WriteLine("├─────┼──────────┼──────────┼──────────┼──────────┼──────────┼────────┼────────┼────────┼────────┼────────┼─────────┤");
 
 	foreach (var r in results)
 	{
 		Console.WriteLine($"│ #{r.Index,2} │ {r.Duration.TotalSeconds,7:F2}s │" +
 						  $" {r.AvgMs,8:F1} │ {r.MaxMs,8:F1} │ {r.MinMs,8:F1} │ {r.P99Ms,8:F1} │" +
-						  $" {r.SlowCount,6} │ {r.ErrorCount,6} │ {r.Throughput,7:N0} │");
+						  $" {r.MoreThan100ms,6} │ {r.MoreThan50ms,6} │ {r.MoreThan10ms,6} │ {r.MoreThan1ms,6} │ {r.ErrorCount,6} │ {r.Throughput,7:N0} │");
 	}
 
-	Console.WriteLine("═══════════════════════════════════════════════════════════════════════════════════════════");
+	Console.WriteLine("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
 }
 
 void PrintFinalStats(List<RunResult> results)
@@ -248,6 +266,9 @@ record RunResult(
 	double MinMs,
 	double MedianMs,
 	double P99Ms,
-	int SlowCount,
+	int MoreThan100ms,
+	int MoreThan50ms,
+	int MoreThan10ms,
+	int MoreThan1ms,
 	double Throughput,
 	int ErrorCount);
