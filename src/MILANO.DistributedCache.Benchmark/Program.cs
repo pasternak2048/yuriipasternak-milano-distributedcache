@@ -81,9 +81,9 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 				try
 				{
 					var localSw = Stopwatch.StartNew();
-					await client.SetAsync(new GrpcCacheSetRequest { Key = key, Value = value, ApiKey = apiKey, ExpirationSeconds = 60 }, metadata);
+					await client.SetAsync(new GrpcCacheSetRequest { Key = key, Value = value, ExpirationSeconds = 60 }, metadata);
 					//await Task.Delay(1);
-					var response = await client.GetAsync(new GrpcCacheGetRequest { Key = key, ApiKey = apiKey }, metadata);
+					var response = await client.GetAsync(new GrpcCacheGetRequest { Key = key }, metadata);
 					localSw.Stop();
 
 					timings.Add(localSw.Elapsed.TotalMilliseconds);
