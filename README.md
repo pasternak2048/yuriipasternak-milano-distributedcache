@@ -105,22 +105,22 @@ service CacheService {
   rpc Dump   (GrpcCacheDumpRequest)   returns (GrpcCacheDumpResponse);
 }
 
-message GrpcCacheGetRequest  { string key = 1; string apiKey = 2; }
+message GrpcCacheGetRequest  { string key = 1; }
 message GrpcCacheGetResponse { string key = 1; string value = 2; bool found = 3; }
 
-message GrpcCacheSetRequest  { string key = 1; string value = 2; string apiKey = 3; int32 expirationSeconds = 4; }
+message GrpcCacheSetRequest  { string key = 1; string value = 2; int32 expirationSeconds = 3; }
 message GrpcCacheSetResponse { bool success = 1; }
 
-message GrpcCacheRemoveRequest { string key = 1; string apiKey = 2; }
+message GrpcCacheRemoveRequest { string key = 1; }
 message GrpcCacheRemoveResponse{ bool success = 1; }
 
-message GrpcCacheExistsRequest{ string key = 1; string apiKey = 2; }
+message GrpcCacheExistsRequest{ string key = 1; }
 message GrpcCacheExistsResponse{ bool exists = 1; }
 
-message GrpcCacheCountRequest { string apiKey = 1; }
+message GrpcCacheCountRequest { }
 message GrpcCacheCountResponse{ int32 count = 1; }
 
-message GrpcCacheDumpRequest  { bool includeExpired = 1; string apiKey = 2; }
+message GrpcCacheDumpRequest  { bool includeExpired = 1; }
 message GrpcCacheDumpResponse { map<string, string> entries = 1; }
 ```
 
