@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>b3bb7455-4b46-4f9e-a192-c29347207cbd</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
@@ -25,11 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Protobuf Include="..\MILANO.DistributedCache.Shared\Protos\cache.proto" GrpcServices="Server" />
+    <ProjectReference Include="..\MILANO.Shared\MILANO.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MILANO.DistributedCache.Shared\MILANO.DistributedCache.Shared.csproj" />
+	<Protobuf Include="..\MILANO.Shared\Protos\cache.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>
