@@ -7,12 +7,12 @@ Simple to reason about, predictable under concurrency, and optionally **sharded*
 
 ## Highlights
 
-- **Pure .NET**: built on BCL only (ASP.NET Core + gRPC), no external packages required.
+- **Pure .NET**: built on BCL only (ASP.NET Core), no external packages required.
 - **Low latency path**: hot reads/writes backed by `ConcurrentDictionary`.
 - **Per‑entry TTL**: optional expiration; a lightweight background cleaner removes expired keys.
 - **Sharding**: split the store into N shards to reduce contention and scale with cores.
 - **Straightforward API**: `Get`, `Set`, `Exists`, `Remove`, `Count`, `Dump`.
-- **gRPC service**: easy to integrate from .NET or any gRPC‑capable client.
+- **HTTP API**: clean, synchronous-friendly endpoints.
 
 ---
 
@@ -22,7 +22,7 @@ Simple to reason about, predictable under concurrency, and optionally **sharded*
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         MILANO Cache Server                         │
 │                                                                     │
-│  gRPC Endpoint (CacheService)  ────────────────►  ICacheService     │
+│  HTTP Endpoint (CacheController)  ────────────────►  ICacheService  │
 │                                                                     │
 │                                     ┌───────────────────────────┐   │
 │                                     │   ShardedCacheService     │   │
@@ -55,74 +55,43 @@ From the server project directory:
 ```bash
 dotnet run
 ```
-This hosts a **gRPC** endpoint (Kestrel).
+This hosts an **HTTP API** using ASP.NET Core Web API.
 
-### Call from a .NET client (gRPC)
+### Call from a .NET client (HttpClient)
 ```csharp
-using Grpc.Net.Client;
-using Grpc.Core;
-using MILANO.DistributedCache.Server.Web.Grpc;
+using var http = new HttpClient();
+http.BaseAddress = new Uri("http://localhost:5000/cache");
 
-var channel = GrpcChannel.ForAddress("http://localhost:5000"); // adjust if needed
-var client  = new CacheService.CacheServiceClient(channel);
+var key = "hello";
+var value = "world";
 
-// If API key validation is enabled, pass the header (example):
-var headers = new Metadata { { "x-api-key", "<your key>" } };
+var content = new FormUrlEncodedContent(new[]
+{
+    new KeyValuePair<string, string>("key", key),
+    new KeyValuePair<string, string>("value", value),
+    new KeyValuePair<string, string>("expirationSeconds", "60")
+});
 
-// SET
-await client.SetAsync(new GrpcCacheSetRequest {
-    Key = "hello",
-    Value = "world",
-    ExpirationSeconds = 60,
-    ApiKey = "<your key>"
-}, headers);
+await http.PostAsync("", content);
 
-// GET
-var resp = await client.GetAsync(new GrpcCacheGetRequest {
-    Key = "hello",
-    ApiKey = "<your key>"
-}, headers);
-
-Console.WriteLine($"{resp.Key} = {resp.Value} (found: {resp.Found})");
+var result = await http.GetAsync(key);
+Console.WriteLine(await result.Content.ReadAsStringAsync());
 ```
 
 > MILANO currently stores and returns **string values** (so “what you put is what you get”).
 
 ---
 
-## gRPC contract (string values)
+## HTTP endpoints
 
-```proto
-syntax = "proto3";
-option csharp_namespace = "MILANO.DistributedCache.Server.Web.Grpc";
+- `POST /cache` — set a key
+- `GET /cache/{key}` — get a value
+- `DELETE /cache/{key}` — remove a key
+- `HEAD /cache/{key}` — check existence
+- `GET /cache/count` — get item count
+- `GET /cache/dump?includeExpired=true` — dump all keys
 
-service CacheService {
-  rpc Get    (GrpcCacheGetRequest)    returns (GrpcCacheGetResponse);
-  rpc Set    (GrpcCacheSetRequest)    returns (GrpcCacheSetResponse);
-  rpc Remove (GrpcCacheRemoveRequest) returns (GrpcCacheRemoveResponse);
-  rpc Exists (GrpcCacheExistsRequest) returns (GrpcCacheExistsResponse);
-  rpc Count  (GrpcCacheCountRequest)  returns (GrpcCacheCountResponse);
-  rpc Dump   (GrpcCacheDumpRequest)   returns (GrpcCacheDumpResponse);
-}
-
-message GrpcCacheGetRequest  { string key = 1; }
-message GrpcCacheGetResponse { string key = 1; string value = 2; bool found = 3; }
-
-message GrpcCacheSetRequest  { string key = 1; string value = 2; int32 expirationSeconds = 3; }
-message GrpcCacheSetResponse { bool success = 1; }
-
-message GrpcCacheRemoveRequest { string key = 1; }
-message GrpcCacheRemoveResponse{ bool success = 1; }
-
-message GrpcCacheExistsRequest{ string key = 1; }
-message GrpcCacheExistsResponse{ bool exists = 1; }
-
-message GrpcCacheCountRequest { }
-message GrpcCacheCountResponse{ int32 count = 1; }
-
-message GrpcCacheDumpRequest  { bool includeExpired = 1; }
-message GrpcCacheDumpResponse { map<string, string> entries = 1; }
-```
+All endpoints support `x-api-key` for optional key validation.
 
 ---
 
@@ -133,59 +102,53 @@ Use `appsettings.json`:
 ```jsonc
 {
   "Cache": {
-    "MaxPayloadSizeBytes": 1000000,        // ~1 MB value limit
-    "DefaultExpirationSeconds": null,      // null = no default TTL
-    "EnableAutoCleanup": true              // background cleaner
+    "MaxPayloadSizeBytes": 1000000,
+    "DefaultExpirationSeconds": null,
+    "EnableAutoCleanup": true
   },
   "Sharding": {
     "Enabled": true,
-    "ShardCount": 4                        // typically near logical CPU count
+    "ShardCount": 4
   }
 }
 ```
 
 Dependency injection (excerpt):
 ```csharp
-services.AddMemoryCache();
 services.AddSingleton<ExpiredEntryCollection>();
 services.AddSingleton<IShardingStrategy, HashModuloShardingStrategy>();
 
 services.AddSingleton<ICacheService>(sp =>
 {
-    var expired  = sp.GetRequiredService<ExpiredEntryCollection>();
+    var expired = sp.GetRequiredService<ExpiredEntryCollection>();
     var strategy = sp.GetRequiredService<IShardingStrategy>();
-
-    // In a real app read from IConfiguration/IOptions<>
-    var shardCount = 4;
-
     return new ShardedCacheService(
-        shardCount,
+        4,
         shardIndex => new InMemoryCacheService(expired, maxPayloadSizeBytes: 1_000_000),
         strategy
     );
 });
 
 services.AddHostedService<BackgroundCleanupService>();
-services.AddGrpc();
 ```
 
 ---
 
 ## Usage notes
 
-- **TTL**: pass `ExpirationSeconds` in `Set`. `0`/`null` means “no expiration”.
-- **Count()**: returns the number of **non‑expired** entries.
+- **TTL**: pass `expirationSeconds` when setting a key.
+- **Count()**: returns non‑expired keys only.
 - **Dump(includeExpired: true)**: debug dump that also includes expired entries.
-- **Sharding**: default strategy is `HashModuloShardingStrategy` based on `GetHashCode(key) % ShardCount`.
+- **Sharding**: default strategy is `HashModuloShardingStrategy`.
 
 ---
 
-## Benchmarks (very short)
+## Benchmarks
 
-On a typical 6C/12T machine, a single MILANO instance reached **~25k req/s** with **p99 ≈ 1.2 ms** under concurrent load in local tests.  
-(Results vary by hardware, runtime config, payload sizes, and network stack.)
+On a 6C/12T machine, MILANO reached **37k+ req/s** over HTTP with `p99 < 1.6ms` in local benchmarks.  
+Requests used real `HttpClient`, not in‑process fakes.
 
-> A small benchmark app is included to run smoke/burst/soak tests and print latency/RPS summaries.
+> Run the bundled CLI benchmark tool for stress tests and latency stats.
 
 ---
 
@@ -202,22 +165,21 @@ public interface ICacheService
     Task<IDictionary<string, string>> DumpAsync(bool includeExpired = false);
 }
 ```
-- `InMemoryCacheService` stores `string` values with optional `DateTimeOffset? Expiration` per entry.
-- `BackgroundCleanupService` checks `ExpiredEntryCollection` and evicts expired keys regularly.
-- `ShardedCacheService` aggregates multiple `ICacheService` backends and routes keys to a shard.
 
 ---
 
 ## Roadmap
 
-- Optional **binary values** with `ContentType` (bytes + mimetype).
-- Raw download endpoint for binary payloads.
-- Admin panel for api keys management.
+- Optional **binary payloads** (`Content-Type`, raw bytes).
+- Raw GET for file-like usage.
+- Admin dashboard for API keys.
+- Custom binary protocol - MCP: MILANO Cache Protocol.
+
 
 ---
 
 ## License
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the MIT License.
 
 **MILANO. Make It Low‑latency And Never Overfetch.**
