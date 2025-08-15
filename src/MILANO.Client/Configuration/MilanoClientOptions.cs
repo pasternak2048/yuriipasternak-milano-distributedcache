@@ -20,7 +20,7 @@ namespace MILANO.Client.Configuration
 		public string ApiKey { get; set; } = default!;
 
 		/// <summary>
-		/// Communication mode: either HTTP (via REST) or gRPC.
+		/// Communication mode: either HTTP (via REST).
 		/// </summary>
 		public MilanoClientMode Mode { get; set; } = MilanoClientMode.Http;
 

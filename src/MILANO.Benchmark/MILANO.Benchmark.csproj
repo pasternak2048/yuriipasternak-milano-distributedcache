@@ -10,8 +10,5 @@
   <ItemGroup>
     <ProjectReference Include="..\MILANO.Common\MILANO.Common.csproj" />
   </ItemGroup>
-  <ItemGroup>
-	<Protobuf Include="..\MILANO.Shared\Protos\cache.proto" GrpcServices="Client" />
-  </ItemGroup>
 
 </Project>

@@ -38,7 +38,6 @@ namespace MILANO.Client.Extensions
 
 		/// <summary>
 		/// Adds the MILANO cache client factory and client implementation.
-		/// Automatically chooses between HTTP and gRPC based on options.
 		/// </summary>
 		private static IServiceCollection AddMilanoCacheClient(this IServiceCollection services)
 		{
