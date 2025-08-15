@@ -1,11 +1,9 @@
-﻿using Grpc.Net.Client;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MILANO.Client.Configuration;
 using MILANO.Client.Enums;
 using MILANO.Client.Interfaces;
-using MILANO.Shared;
-using MILANO.Shared.Protos;
+using MILANO.Common;
 
 namespace MILANO.Client.Services
 {
@@ -36,7 +34,6 @@ namespace MILANO.Client.Services
 		{
 			return _options.Mode switch
 			{
-				MilanoClientMode.Grpc => CreateGrpcClient(),
 				MilanoClientMode.Http => CreateHttpClient(),
 				_ => throw new InvalidOperationException($"Unknown client mode: {_options.Mode}")
 			};
@@ -50,13 +47,6 @@ namespace MILANO.Client.Services
 			httpClient.DefaultRequestHeaders.Add(Constants.Headers.ApiKey, _options.ApiKey);
 
 			return new HttpMilanoCacheClient(httpClient);
-		}
-
-		private IMilanoCacheClient CreateGrpcClient()
-		{
-			var channel = GrpcChannel.ForAddress(_options.ServerHost);
-			var grpcClient = new CacheService.CacheServiceClient(channel);
-			return new GrpcMilanoCacheClient(grpcClient);
 		}
 	}
 }

@@ -1,5 +1,5 @@
-﻿using MILANO.Server.Application.Cache;
-using MILANO.Shared.Dtos.Cache;
+﻿using MILANO.Common.Dtos.Cache;
+using MILANO.Server.Application.Cache;
 
 namespace MILANO.Server.Infrastructure.Cache
 {

@@ -1,4 +1,4 @@
-﻿namespace MILANO.Shared.Dtos.Cache
+﻿namespace MILANO.Common.Dtos.Cache
 {
 	/// <summary>
 	/// Represents a response containing the result of a cache get operation.

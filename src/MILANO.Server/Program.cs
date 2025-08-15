@@ -1,5 +1,4 @@
 using MILANO.Server.Web.Extensions;
-using MILANO.Server.Web.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +19,5 @@ app.UseRouting();
 app.UseMilanoMiddleware();
 
 app.MapMilanoEndpoints();
-
-app.MapGrpcService<CacheGrpcService>();
 
 app.Run();
