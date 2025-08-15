@@ -1,7 +1,7 @@
-﻿using MILANO.DistributedCache.Server.Application.Security;
-using MILANO.DistributedCache.Server.Application.Security.Models;
+﻿using MILANO.Server.Application.Security;
+using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Security
+namespace MILANO.Server.Infrastructure.Security
 {
 	/// <summary>
 	/// Default implementation of <see cref="IApiKeyValidator"/> that checks existence and permissions of API keys.

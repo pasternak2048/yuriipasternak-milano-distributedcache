@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Server.Application.Security.Models;
+﻿using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.DistributedCache.Server.Application.Security
+namespace MILANO.Server.Application.Security
 {
 	/// <summary>
 	/// Provides functionality to validate API keys and their permissions.

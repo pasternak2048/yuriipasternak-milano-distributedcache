@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Server.Application.Security.Models;
+﻿using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.DistributedCache.Server.Web.Context
+namespace MILANO.Server.Web.Context
 {
 	/// <summary>
 	/// Provides access to the currently authorized API key and its permissions.

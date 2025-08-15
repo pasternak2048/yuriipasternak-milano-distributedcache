@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Web.Configuration
+﻿namespace MILANO.Server.Web.Configuration
 {
 	/// <summary>
 	/// Represents the raw API key provided by the client via HTTP headers.

@@ -1,8 +1,8 @@
-﻿using MILANO.DistributedCache.Server.Application.Cache;
+﻿using MILANO.Server.Application.Cache;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// Simple sharding strategy based on hash code modulo.

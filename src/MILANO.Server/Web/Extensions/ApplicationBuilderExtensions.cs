@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Server.Web.Middleware;
+﻿using MILANO.Server.Web.Middleware;
 
-namespace MILANO.DistributedCache.Server.Web.Extensions
+namespace MILANO.Server.Web.Extensions
 {
 	/// <summary>
 	/// Provides extension methods for configuring the application middleware pipeline.

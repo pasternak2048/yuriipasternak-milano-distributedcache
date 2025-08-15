@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+﻿namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// Represents a single in-memory cache entry, including its string value and optional expiration time.

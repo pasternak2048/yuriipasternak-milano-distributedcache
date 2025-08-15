@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Server.Application.Cache;
+﻿using MILANO.Server.Application.Cache;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// Background service responsible for periodically cleaning up expired cache entries.

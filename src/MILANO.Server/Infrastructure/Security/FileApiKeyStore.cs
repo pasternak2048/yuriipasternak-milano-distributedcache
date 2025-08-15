@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using MILANO.DistributedCache.Server.Application.Security;
-using MILANO.DistributedCache.Server.Application.Security.Models;
-using MILANO.DistributedCache.Server.Infrastructure.Options;
+using MILANO.Server.Application.Security;
+using MILANO.Server.Application.Security.Models;
+using MILANO.Server.Infrastructure.Options;
 using System.Text.Json;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Security
+namespace MILANO.Server.Infrastructure.Security
 {
 	/// <summary>
 	/// File-based implementation of <see cref="IApiKeyStore"/> that loads keys from a JSON file.

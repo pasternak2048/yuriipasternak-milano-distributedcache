@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Server.Application.Security.Models;
+﻿using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.DistributedCache.Server.Application.Security
+namespace MILANO.Server.Application.Security
 {
 	/// <summary>
 	/// Defines a store for retrieving API keys and their permissions.

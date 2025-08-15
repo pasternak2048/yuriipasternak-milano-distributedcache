@@ -1,8 +1,8 @@
-﻿using MILANO.DistributedCache.Server.Application.Common;
-using MILANO.DistributedCache.Server.Application.Security;
-using MILANO.DistributedCache.Server.Web.Context;
+﻿using MILANO.Server.Application.Common;
+using MILANO.Server.Application.Security;
+using MILANO.Server.Web.Context;
 
-namespace MILANO.DistributedCache.Server.Web.Middleware
+namespace MILANO.Server.Web.Middleware
 {
 	/// <summary>
 	/// Middleware that validates the incoming API key and its permissions before allowing access to protected endpoints.
