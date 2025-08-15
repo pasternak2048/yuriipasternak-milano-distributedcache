@@ -9,7 +9,7 @@ namespace MILANO.Client.Services
 {
 	/// <summary>
 	/// Factory responsible for creating the appropriate IMilanoCacheClient instance
-	/// based on MilanoClientOptions (Http or Grpc).
+	/// based on MilanoClientOptions (Http).
 	/// </summary>
 	public sealed class MilanoCacheClientFactory
 	{

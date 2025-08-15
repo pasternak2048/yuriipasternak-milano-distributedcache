@@ -2,7 +2,7 @@
 {
 	/// <summary>
 	/// Represents the core contract for interacting with the MILANO distributed cache server.
-	/// Abstracts away transport (HTTP or gRPC).
+	/// Abstracts away transport (HTTP).
 	/// </summary>
 	public interface IMilanoCacheClient
 	{
