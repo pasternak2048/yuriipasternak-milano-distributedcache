@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
+namespace MILANO.Server.Application.Cache.Exceptions
 {
 	/// <summary>
 	/// Exception thrown when a cache key conflict occurs (e.g. key already exists and overwrite is disabled).

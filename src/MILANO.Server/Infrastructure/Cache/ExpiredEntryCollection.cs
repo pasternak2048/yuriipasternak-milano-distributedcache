@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// Thread-safe collection for tracking keys with their expiration timestamps.

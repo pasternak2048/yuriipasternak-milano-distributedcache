@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
+using MILANO.Server.Application.Cache.Exceptions;
 
-namespace MILANO.DistributedCache.Server.Web.Filters
+namespace MILANO.Server.Web.Filters
 {
 	/// <summary>
 	/// Global filter that catches unhandled exceptions and converts them to HTTP responses.

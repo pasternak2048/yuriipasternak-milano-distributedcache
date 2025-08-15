@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Application.Common
+﻿namespace MILANO.Server.Application.Common
 {
 	/// <summary>
 	/// Provides global constants used throughout the application.

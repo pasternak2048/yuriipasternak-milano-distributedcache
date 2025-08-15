@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Application.Security.Models
+﻿namespace MILANO.Server.Application.Security.Models
 {
 	/// <summary>
 	/// Represents an API key and its associated permissions.

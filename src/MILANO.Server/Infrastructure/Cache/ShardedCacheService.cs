@@ -1,7 +1,7 @@
-﻿using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Shared.Dtos.Cache;
+﻿using MILANO.Server.Application.Cache;
+using MILANO.Shared.Dtos.Cache;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// Distributed cache service that partitions data across multiple in-memory shards.

@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Infrastructure.Options
+﻿namespace MILANO.Server.Infrastructure.Options
 {
 	/// <summary>
 	/// Represents configuration options for the in-memory cache.

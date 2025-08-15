@@ -1,6 +1,6 @@
-﻿using MILANO.DistributedCache.Shared.Dtos.Cache;
+﻿using MILANO.Shared.Dtos.Cache;
 
-namespace MILANO.DistributedCache.Server.Application.Cache
+namespace MILANO.Server.Application.Cache
 {
 	/// <summary>
 	/// Defines operations for interacting with the distributed cache.

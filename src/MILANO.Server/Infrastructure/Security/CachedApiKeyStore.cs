@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using MILANO.DistributedCache.Server.Application.Common;
-using MILANO.DistributedCache.Server.Application.Security;
-using MILANO.DistributedCache.Server.Application.Security.Models;
+using MILANO.Server.Application.Common;
+using MILANO.Server.Application.Security;
+using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Security
+namespace MILANO.Server.Infrastructure.Security
 {
 	/// <summary>
 	/// Caching decorator for <see cref="IApiKeyStore"/> that stores API keys in memory

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Common;
-using MILANO.DistributedCache.Server.Web.Context;
 using MILANO.DistributedCache.Shared.Dtos.Cache;
+using MILANO.Server.Application.Cache;
+using MILANO.Server.Application.Common;
+using MILANO.Server.Web.Context;
+using MILANO.Shared.Dtos.Cache;
 
-namespace MILANO.DistributedCache.Server.Web.Controllers
+namespace MILANO.Server.Web.Controllers
 {
 	/// <summary>
 	/// Provides endpoints for interacting with the distributed cache.

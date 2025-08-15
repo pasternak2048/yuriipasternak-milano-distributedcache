@@ -1,9 +1,9 @@
-﻿using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
-using MILANO.DistributedCache.Shared.Dtos.Cache;
+﻿using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
+using MILANO.Server.Application.Cache;
+using MILANO.Shared.Dtos.Cache;
 using System.Collections.Concurrent;
 
-namespace MILANO.DistributedCache.Server.Infrastructure.Cache
+namespace MILANO.Server.Infrastructure.Cache
 {
 	/// <summary>
 	/// In-memory implementation of <see cref="ICacheService"/> that stores key-value pairs with optional TTL.

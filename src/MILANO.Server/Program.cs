@@ -1,5 +1,5 @@
-using MILANO.DistributedCache.Server.Web.Extensions;
-using MILANO.DistributedCache.Server.Web.Grpc;
+using MILANO.Server.Web.Extensions;
+using MILANO.Server.Web.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 

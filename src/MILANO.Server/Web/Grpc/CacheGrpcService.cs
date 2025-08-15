@@ -1,11 +1,11 @@
 ﻿using Grpc.Core;
-using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Cache.Exceptions;
-using MILANO.DistributedCache.Shared.Dtos.Cache;
 using MILANO.DistributedCache.Shared.Protos;
+using MILANO.Server.Application.Cache;
+using MILANO.Server.Application.Cache.Exceptions;
+using MILANO.Shared.Dtos.Cache;
 
 
-namespace MILANO.DistributedCache.Server.Web.Grpc
+namespace MILANO.Server.Web.Grpc
 {
 	public sealed class CacheGrpcService : CacheService.CacheServiceBase
 	{

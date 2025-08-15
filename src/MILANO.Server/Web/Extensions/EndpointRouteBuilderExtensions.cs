@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Web.Extensions
+﻿namespace MILANO.Server.Web.Extensions
 {
 	/// <summary>
 	/// Provides extension methods for mapping endpoints.

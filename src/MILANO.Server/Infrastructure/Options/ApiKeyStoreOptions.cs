@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Infrastructure.Options
+﻿namespace MILANO.Server.Infrastructure.Options
 {
 	/// <summary>
 	/// Options for configuring the API key store file path.

@@ -1,8 +1,8 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
-using MILANO.DistributedCache.Server.Application.Security;
+using MILANO.Server.Application.Security;
 
-namespace MILANO.DistributedCache.Server.Web.Grpc
+namespace MILANO.Server.Web.Grpc
 {
 	/// <summary>
 	/// Intercepts incoming gRPC requests and validates API keys against required permissions.

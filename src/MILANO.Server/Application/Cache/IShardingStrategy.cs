@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Application.Cache
+﻿namespace MILANO.Server.Application.Cache
 {
 	/// <summary>
 	/// Defines a strategy for mapping cache keys to shard indices.

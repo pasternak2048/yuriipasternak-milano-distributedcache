@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using MILANO.DistributedCache.Server.Application.Cache;
-using MILANO.DistributedCache.Server.Application.Security;
-using MILANO.DistributedCache.Server.Infrastructure.Cache;
-using MILANO.DistributedCache.Server.Infrastructure.Options;
-using MILANO.DistributedCache.Server.Infrastructure.Security;
-using MILANO.DistributedCache.Server.Web.Filters;
-using MILANO.DistributedCache.Server.Web.Grpc;
+using MILANO.Server.Application.Cache;
+using MILANO.Server.Application.Security;
+using MILANO.Server.Infrastructure.Cache;
+using MILANO.Server.Infrastructure.Options;
+using MILANO.Server.Infrastructure.Security;
+using MILANO.Server.Web.Filters;
+using MILANO.Server.Web.Grpc;
 
-namespace MILANO.DistributedCache.Server.Web.Extensions
+namespace MILANO.Server.Web.Extensions
 {
 	/// <summary>
 	/// Provides extension methods for registering services used by the MILANO distributed cache.
@@ -51,7 +51,7 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 
 			// API key store and validation
 			services.AddSingleton<FileApiKeyStore>();
-			services.AddSingleton<CachedApiKeyStore>(sp =>
+			services.AddSingleton(sp =>
 			{
 				var fileStore = sp.GetRequiredService<FileApiKeyStore>();
 				var cache = sp.GetRequiredService<IMemoryCache>();

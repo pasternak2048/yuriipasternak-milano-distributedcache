@@ -1,4 +1,4 @@
-﻿namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
+﻿namespace MILANO.Server.Application.Cache.Exceptions
 {
 	/// <summary>
 	/// Exception thrown when a cache entry exceeds the configured maximum allowed size.
