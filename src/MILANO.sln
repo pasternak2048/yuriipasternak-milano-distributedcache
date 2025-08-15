@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36401.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MILANO.Shared", "MILANO.Shared\MILANO.Shared.csproj", "{5678B0D0-AA37-69C5-6037-63353E9E0F7A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MILANO.Server", "MILANO.Server\MILANO.Server.csproj", "{83736A7E-2AE6-CF16-FD4D-72B9D4E28D1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MILANO.Benchmark", "MILANO.Benchmark\MILANO.Benchmark.csproj", "{CFAAB145-83BB-D79F-D127-9FD275050BD9}"
@@ -13,16 +11,14 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MILANO.Client", "MILANO.Client\MILANO.Client.csproj", "{AF7497F5-1933-432E-B6B7-ACF70272C656}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MILANO.Common", "MILANO.Common\MILANO.Common.csproj", "{C190749C-5F7E-3751-37C8-7E37A8C35B61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5678B0D0-AA37-69C5-6037-63353E9E0F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5678B0D0-AA37-69C5-6037-63353E9E0F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5678B0D0-AA37-69C5-6037-63353E9E0F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5678B0D0-AA37-69C5-6037-63353E9E0F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83736A7E-2AE6-CF16-FD4D-72B9D4E28D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83736A7E-2AE6-CF16-FD4D-72B9D4E28D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83736A7E-2AE6-CF16-FD4D-72B9D4E28D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{AF7497F5-1933-432E-B6B7-ACF70272C656}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF7497F5-1933-432E-B6B7-ACF70272C656}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF7497F5-1933-432E-B6B7-ACF70272C656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C190749C-5F7E-3751-37C8-7E37A8C35B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C190749C-5F7E-3751-37C8-7E37A8C35B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C190749C-5F7E-3751-37C8-7E37A8C35B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C190749C-5F7E-3751-37C8-7E37A8C35B61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

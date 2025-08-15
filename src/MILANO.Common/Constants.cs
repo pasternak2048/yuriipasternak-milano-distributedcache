@@ -1,4 +1,4 @@
-﻿namespace MILANO.Shared
+﻿namespace MILANO.Common
 {
 	/// <summary>
 	/// Provides global constants used throughout the application.

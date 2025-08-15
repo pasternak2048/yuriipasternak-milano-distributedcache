@@ -1,4 +1,4 @@
-﻿using MILANO.Shared.Dtos.Cache;
+﻿using MILANO.Common.Dtos.Cache;
 
 namespace MILANO.Server.Application.Cache
 {

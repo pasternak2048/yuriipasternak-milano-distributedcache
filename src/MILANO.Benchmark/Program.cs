@@ -1,16 +1,21 @@
-﻿using Grpc.Core;
-using Grpc.Net.Client;
-using MILANO.Shared.Protos;
+﻿using MILANO.Common;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 Console.OutputEncoding = Encoding.UTF8;
 
 const string apiKey = "test-key-full-access";
-const string apiHeader = "x-api-key";
-const string address = "https://localhost:7011";
+const string apiHeader = Constants.Headers.ApiKey;
+const string address = "https://localhost:7011/cache/";
+
+using var http = new HttpClient();
+http.BaseAddress = new Uri(address);
+http.DefaultRequestHeaders.Add(apiHeader, apiKey);
+http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 Console.Write("🔢 Enter total number of requests per run: ");
 int totalRequests = int.Parse(Console.ReadLine() ?? "120000");
@@ -21,16 +26,13 @@ int concurrency = int.Parse(Console.ReadLine() ?? "12");
 Console.Write("🔁 Enter number of runs: ");
 int runs = int.Parse(Console.ReadLine() ?? "2");
 
-using var channel = GrpcChannel.ForAddress(address);
-var client = new CacheService.CacheServiceClient(channel);
-
 var results = new List<RunResult>();
 
 PrintBoxed("🏋️ MILANO Benchmark Session Started");
 for (int i = 1; i <= runs; i++)
 {
 	PrintBenchmarkStart(i);
-	var result = await RunLoader(client, totalRequests, concurrency, i);
+	var result = await RunLoader(http, totalRequests, concurrency, i);
 	results.Add(result);
 	PrintBenchmarkEnd(i, result.Duration);
 	Console.WriteLine();
@@ -47,13 +49,12 @@ PrintFinalStats(results);
 
 // === MAIN LOADER ===
 
-async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int totalRequests, int concurrency, int index)
+async Task<RunResult> RunLoader(HttpClient http, int totalRequests, int concurrency, int index)
 {
 	var stopwatch = Stopwatch.StartNew();
 	var errorCount = 0;
 	var timings = new ConcurrentBag<double>();
 	var errorDetails = new ConcurrentBag<string>();
-	var metadata = new Metadata { { apiHeader, apiKey } };
 
 	int done = 0;
 	void ReportProgress()
@@ -75,29 +76,58 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 			int iterations = totalRequests / concurrency;
 			for (int j = 0; j < iterations; j++)
 			{
-				var key = $"key_{index}{taskNum}_{j}{DateTime.UtcNow.Ticks}";
-				var value = $"value_{index}{taskNum}_{j}{DateTime.UtcNow.Ticks}";
+				var ticks = DateTime.UtcNow.Ticks;
+				var key = $"key_{index}{taskNum}_{j}{ticks}";
+				var value = $"value_{index}{taskNum}_{j}{ticks}";
+
+				var setPayload = JsonSerializer.Serialize(new
+				{
+					Key = key,
+					Value = value,
+					ExpirationSeconds = 60
+				});
+
+				var setContent = new StringContent(setPayload, Encoding.UTF8, "application/json");
+
 				try
 				{
 					var localSw = Stopwatch.StartNew();
-					await client.SetAsync(new GrpcCacheSetRequest { Key = key, Value = value, ExpirationSeconds = 60 }, metadata);
-					//await Task.Delay(1);
-					var response = await client.GetAsync(new GrpcCacheGetRequest { Key = key }, metadata);
-					localSw.Stop();
 
-					timings.Add(localSw.Elapsed.TotalMilliseconds);
-					bool ok = response.Found && response.Value.Equals(value);
-					if (!ok)
+					// SET
+					var setResp = await http.PostAsync("", setContent);
+					if (!setResp.IsSuccessStatusCode)
 					{
-						errorDetails.Add($"MISMATCH: {key}");
+						errorDetails.Add($"❌ SET FAIL [{key}]: {setResp.StatusCode}");
+						Interlocked.Increment(ref errorCount);
+						continue;
+					}
+
+					// GET
+					var getResp = await http.GetAsync($"{Uri.EscapeDataString(key)}");
+					if (!getResp.IsSuccessStatusCode)
+					{
+						errorDetails.Add($"❌ GET FAIL [{key}]: {getResp.StatusCode}");
+						Interlocked.Increment(ref errorCount);
+						continue;
+					}
+
+					var returnedValue = JsonSerializer.Deserialize<string>(await getResp.Content.ReadAsStringAsync());
+
+					localSw.Stop();
+					timings.Add(localSw.Elapsed.TotalMilliseconds);
+
+					if (returnedValue != value)
+					{
+						errorDetails.Add($"❌ MISMATCH [{key}]: got={returnedValue}");
 						Interlocked.Increment(ref errorCount);
 					}
 				}
 				catch (Exception ex)
 				{
-					errorDetails.Add($"EXCEPTION [{key}]: {ex.Message}");
+					errorDetails.Add($"❌ EXCEPTION [{key}]: {ex.Message}");
 					Interlocked.Increment(ref errorCount);
 				}
+
 				ReportProgress();
 			}
 		});
@@ -107,6 +137,7 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 	stopwatch.Stop();
 	Console.WriteLine();
 
+	// Aggregate Results
 	var elapsed = stopwatch.Elapsed;
 	var ordered = timings.OrderBy(x => x).ToArray();
 	double avg = ordered.Average();
@@ -122,12 +153,20 @@ async Task<RunResult> RunLoader(CacheService.CacheServiceClient client, int tota
 
 	PrintReportHeader();
 	Console.WriteLine();
-	PrintEnhancedReport(elapsed, totalRequests, concurrency, avg, max, min, median, p99, moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms, rps, errorCount, errorDetails, ordered.Length);
+	PrintEnhancedReport(
+		elapsed, totalRequests, concurrency,
+		avg, max, min, median, p99,
+		moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms,
+		rps, errorCount, errorDetails, ordered.Length
+	);
 
-	return new RunResult(index, elapsed, avg, max, min, median, p99, moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms, rps, errorCount);
+	return new RunResult(index, elapsed, avg, max, min, median, p99,
+		moreThan100ms, moreThan50ms, moreThan10ms, moreThan1ms,
+		rps, errorCount);
 }
 
 // === OUTPUT HELPERS ===
+
 
 void PrintBoxed(string text)
 {

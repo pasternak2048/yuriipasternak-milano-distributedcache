@@ -1,5 +1,5 @@
 ﻿using MILANO.Client.Interfaces;
-using MILANO.Shared.Dtos.Cache;
+using MILANO.Common.Dtos.Cache;
 using System.Net.Http.Json;
 using System.Text.Json;
 

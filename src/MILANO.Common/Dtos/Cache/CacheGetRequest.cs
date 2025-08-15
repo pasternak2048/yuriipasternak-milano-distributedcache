@@ -1,4 +1,4 @@
-﻿namespace MILANO.Shared.Dtos.Cache
+﻿namespace MILANO.Common.Dtos.Cache
 {
 	/// <summary>
 	/// Represents a request to retrieve a value from the cache by key.

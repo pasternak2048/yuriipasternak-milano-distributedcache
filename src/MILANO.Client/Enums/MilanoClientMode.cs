@@ -8,11 +8,6 @@
 		/// <summary>
 		/// Use standard REST over HTTP.
 		/// </summary>
-		Http,
-
-		/// <summary>
-		/// Use gRPC for communication.
-		/// </summary>
-		Grpc
+		Http
 	}
 }

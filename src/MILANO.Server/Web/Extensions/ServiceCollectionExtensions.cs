@@ -6,7 +6,6 @@ using MILANO.Server.Infrastructure.Cache;
 using MILANO.Server.Infrastructure.Options;
 using MILANO.Server.Infrastructure.Security;
 using MILANO.Server.Web.Filters;
-using MILANO.Server.Web.Grpc;
 
 namespace MILANO.Server.Web.Extensions
 {
@@ -60,13 +59,6 @@ namespace MILANO.Server.Web.Extensions
 			});
 			services.AddSingleton<IApiKeyStore>(sp => sp.GetRequiredService<CachedApiKeyStore>());
 			services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
-
-			// gRPC
-			services.AddScoped<GrpcPermissionInterceptor>();
-			services.AddGrpc(options =>
-			{
-				options.Interceptors.Add<GrpcPermissionInterceptor>();
-			});
 
 			// Controllers
 			services.AddControllers(options =>
