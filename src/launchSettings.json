@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "milano.distributedcache.server": "StartDebugging"
+        "milano.distributedcache.server": "StartDebugging",
+        "milano.server": "StartDebugging"
       }
     }
   }

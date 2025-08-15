@@ -12,19 +12,20 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MILANO.DistributedCache.Server.csproj", "."]
-RUN dotnet restore "./MILANO.DistributedCache.Server.csproj"
+COPY ["MILANO.Server/MILANO.Server.csproj", "MILANO.Server/"]
+COPY ["MILANO.Shared/MILANO.Shared.csproj", "MILANO.Shared/"]
+RUN dotnet restore "./MILANO.Server/MILANO.Server.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./MILANO.DistributedCache.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/MILANO.Server"
+RUN dotnet build "./MILANO.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./MILANO.DistributedCache.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./MILANO.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MILANO.DistributedCache.Server.dll"]
+ENTRYPOINT ["dotnet", "MILANO.Server.dll"]

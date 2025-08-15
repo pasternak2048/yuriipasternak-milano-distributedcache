@@ -18,10 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MILANO.DistributedCache.Shared\MILANO.DistributedCache.Shared.csproj" />
+    <ProjectReference Include="..\MILANO.Shared\MILANO.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Protobuf Include="..\MILANO.DistributedCache.Shared\Protos\cache.proto" GrpcServices="Client" />
+	<Protobuf Include="..\MILANO.Shared\Protos\cache.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

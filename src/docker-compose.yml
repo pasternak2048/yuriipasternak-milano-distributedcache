@@ -1,6 +1,6 @@
 services:
-  milano.distributedcache.server:
-    image: ${DOCKER_REGISTRY-}milanodistributedcacheserver
+  milano.server:
+    image: ${DOCKER_REGISTRY-}milanoserver
     build:
-      context: MILANO.DistributedCache.Server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: MILANO.Server/Dockerfile
