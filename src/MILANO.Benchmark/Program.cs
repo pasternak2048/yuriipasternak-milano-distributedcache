@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
-using MILANO.DistributedCache.Shared.Protos;
+using MILANO.Shared.Protos;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;

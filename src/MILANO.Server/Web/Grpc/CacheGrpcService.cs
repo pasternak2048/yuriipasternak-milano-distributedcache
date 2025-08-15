@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using MILANO.DistributedCache.Shared.Protos;
+using MILANO.Shared.Protos;
 using MILANO.Server.Application.Cache;
 using MILANO.Server.Application.Cache.Exceptions;
 using MILANO.Shared.Dtos.Cache;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using MILANO.Server.Application.Common;
 using MILANO.Server.Application.Security;
 using MILANO.Server.Application.Security.Models;
+using MILANO.Shared;
 
 namespace MILANO.Server.Infrastructure.Security
 {

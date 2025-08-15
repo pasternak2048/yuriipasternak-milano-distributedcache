@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MILANO.Server.Application.Cache;
-using MILANO.Server.Application.Common;
 using MILANO.Server.Web.Context;
+using MILANO.Shared;
 using MILANO.Shared.Dtos.Cache;
 
 namespace MILANO.Server.Web.Controllers

@@ -1,4 +1,4 @@
-﻿namespace MILANO.Server.Application.Common
+﻿namespace MILANO.Shared
 {
 	/// <summary>
 	/// Provides global constants used throughout the application.
@@ -10,7 +10,7 @@
 		/// </summary>
 		public static class Headers
 		{
-			public const string ApiKey = "X-API-Key";
+			public const string ApiKey = "X-Milano-ApiKey";
 		}
 
 		/// <summary>

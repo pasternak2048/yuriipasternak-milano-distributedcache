@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "MILANO.DistributedCache.Shared.Protos";
+option csharp_namespace = "MILANO.Shared.Protos";
 
 service CacheService {
   rpc Get (GrpcCacheGetRequest) returns (GrpcCacheGetResponse);
