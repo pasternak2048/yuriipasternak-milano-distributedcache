@@ -32,7 +32,6 @@ namespace MILANO.DistributedCache.Server.Infrastructure.Cache
 		{
 			_strategy = strategy;
 
-			// Create N shards using the provided factory
 			_shards = Enumerable.Range(0, shardCount)
 								.Select(i => shardFactory(i))
 								.ToArray();

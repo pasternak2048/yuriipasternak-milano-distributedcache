@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
+﻿namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
 {
 	/// <summary>
 	/// Exception thrown when a cache entry exceeds the configured maximum allowed size.
@@ -28,21 +26,6 @@ namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
 		{
 			ActualSizeBytes = actualSizeBytes;
 			MaxAllowedSizeBytes = maxAllowedSizeBytes;
-		}
-
-		private CacheEntryTooLargeException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-			ActualSizeBytes = info.GetInt32(nameof(ActualSizeBytes));
-			MaxAllowedSizeBytes = info.GetInt32(nameof(MaxAllowedSizeBytes));
-		}
-
-		/// <inheritdoc/>
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			base.GetObjectData(info, context);
-			info.AddValue(nameof(ActualSizeBytes), ActualSizeBytes);
-			info.AddValue(nameof(MaxAllowedSizeBytes), MaxAllowedSizeBytes);
 		}
 	}
 }

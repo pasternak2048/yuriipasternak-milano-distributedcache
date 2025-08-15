@@ -22,18 +22,5 @@ namespace MILANO.DistributedCache.Server.Application.Cache.Exceptions
 		{
 			Key = key;
 		}
-
-		private CacheKeyConflictException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-			Key = info.GetString(nameof(Key)) ?? string.Empty;
-		}
-
-		/// <inheritdoc/>
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			base.GetObjectData(info, context);
-			info.AddValue(nameof(Key), Key);
-		}
 	}
 }

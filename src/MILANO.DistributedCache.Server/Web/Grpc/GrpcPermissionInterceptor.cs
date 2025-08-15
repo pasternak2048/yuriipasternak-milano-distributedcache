@@ -32,7 +32,7 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 			ServerCallContext context,
 			UnaryServerMethod<TRequest, TResponse> continuation)
 		{
-			var method = context.Method; // Example: "/Cache.CacheService/Get"
+			var method = context.Method;
 			var apiKey = context.RequestHeaders.GetValue("x-api-key");
 
 			if (string.IsNullOrWhiteSpace(apiKey))
@@ -41,7 +41,6 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 				throw new RpcException(new Status(StatusCode.Unauthenticated, "Missing API key"));
 			}
 
-			// Define permission dynamically based on method name
 			var requiredPermission = ExtractPermissionFromMethod(method);
 
 			var result = await _validator.ValidateAsync(apiKey, requiredPermission);
@@ -52,7 +51,6 @@ namespace MILANO.DistributedCache.Server.Web.Grpc
 				throw new RpcException(new Status(StatusCode.PermissionDenied, "Invalid API key or insufficient permissions"));
 			}
 
-			// All good — continue to the handler
 			return await continuation(request, context);
 		}
 
