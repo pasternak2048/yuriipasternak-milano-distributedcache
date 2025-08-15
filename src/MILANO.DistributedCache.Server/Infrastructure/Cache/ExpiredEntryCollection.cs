@@ -57,10 +57,8 @@ namespace MILANO.DistributedCache.Server.Infrastructure.Cache
 				}
 			}
 
-			// Fully clear the original queue
 			while (_queue.TryDequeue(out _)) { }
 
-			// Repopulate it with only non-deleted entries
 			foreach (var item in newQueue)
 			{
 				_queue.Enqueue(item);

@@ -44,7 +44,6 @@ namespace MILANO.DistributedCache.Server.Infrastructure.Cache
 				}
 				else
 				{
-					// Use internal async removal
 					_ = RemoveAsync(request.Key);
 				}
 			}

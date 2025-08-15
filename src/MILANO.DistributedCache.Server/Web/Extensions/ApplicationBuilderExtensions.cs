@@ -37,10 +37,7 @@ namespace MILANO.DistributedCache.Server.Web.Extensions
 		/// <returns>The same application builder.</returns>
 		public static IApplicationBuilder UseMilanoMiddleware(this IApplicationBuilder app)
 		{
-			// Example: global exception handling (if needed)
 			// app.UseMiddleware<ApiExceptionMiddleware>();
-
-			// API key auth per route
 			app.UseApiKeyAuthFor("/cache", "GET", "get");
 			app.UseApiKeyAuthFor("/cache", "POST", "set");
 
