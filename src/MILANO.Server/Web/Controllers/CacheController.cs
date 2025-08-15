@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MILANO.DistributedCache.Shared.Dtos.Cache;
 using MILANO.Server.Application.Cache;
 using MILANO.Server.Application.Common;
 using MILANO.Server.Web.Context;
