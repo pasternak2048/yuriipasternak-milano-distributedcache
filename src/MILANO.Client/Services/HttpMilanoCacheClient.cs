@@ -1,5 +1,6 @@
 ﻿using MILANO.Client.Interfaces;
 using MILANO.Common.Dtos.Cache;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -26,7 +27,7 @@ namespace MILANO.Client.Services
 		{
 			var response = await _http.GetAsync($"/cache/{key}", ct);
 
-			if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+			if (response.StatusCode == HttpStatusCode.NotFound)
 				return null;
 
 			response.EnsureSuccessStatusCode();

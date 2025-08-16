@@ -14,53 +14,79 @@ namespace MILANO.Server.Web.Extensions
 	/// </summary>
 	public static class ServiceCollectionExtensions
 	{
-		/// <summary>
-		/// Adds all core services required for the distributed cache server.
-		/// </summary>
-		/// <param name="services">The service collection.</param>
-		/// <param name="configuration">The application configuration.</param>
-		/// <returns>The same service collection instance.</returns>
 		public static IServiceCollection AddMilanoDistributedCache(this IServiceCollection services, IConfiguration configuration)
 		{
-			// Options
-			services.Configure<CacheOptions>(configuration.GetSection("CacheOptions"));
-			services.Configure<ApiKeyStoreOptions>(configuration.GetSection("ApiKeyStore"));
+			services
+				.AddMilanoOptions(configuration)
+				.AddMilanoCache()
+				.AddMilanoApiKeyValidation()
+				.AddMilanoControllers();
 
-			// Cache
+			return services;
+		}
+
+		private static IServiceCollection AddMilanoOptions(this IServiceCollection services, IConfiguration configuration)
+		{
+			services
+				.AddOptions<CacheOptions>()
+				.Bind(configuration.GetSection("CacheOptions"))
+				.ValidateDataAnnotations()
+				.ValidateOnStart();
+
+			services
+				.AddOptions<ApiKeyStoreOptions>()
+				.Bind(configuration.GetSection("ApiKeyStore"))
+				.ValidateDataAnnotations()
+				.ValidateOnStart();
+
+			return services;
+		}
+
+		private static IServiceCollection AddMilanoCache(this IServiceCollection services)
+		{
 			services.AddMemoryCache();
 			services.AddSingleton<ExpiredEntryCollection>();
 			services.AddSingleton<IShardingStrategy, HashModuloShardingStrategy>();
 
-			services.AddSingleton<ICacheService>(provider =>
+			services.AddSingleton<ICacheService>(sp =>
 			{
-				var expiredEntries = provider.GetRequiredService<ExpiredEntryCollection>();
-				var strategy = provider.GetRequiredService<IShardingStrategy>();
-				var options = provider.GetRequiredService<IOptions<CacheOptions>>().Value;
-
-				var shardCount = options.ShardCount;
-				var payloadLimit = options.MaxPayloadSizeBytes;
+				var expiredEntries = sp.GetRequiredService<ExpiredEntryCollection>();
+				var strategy = sp.GetRequiredService<IShardingStrategy>();
+				var options = sp.GetRequiredService<IOptions<CacheOptions>>().Value;
 
 				return new ShardedCacheService(
-					shardCount,
-					shardIndex => new InMemoryCacheService(expiredEntries, payloadLimit),
-					strategy
+					shardCount: options.ShardCount,
+					shardFactory: _ => new InMemoryCacheService(expiredEntries, options.MaxPayloadSizeBytes),
+					strategy: strategy
 				);
 			});
+
 			services.AddHostedService<BackgroundCleanupService>();
 
-			// API key store and validation
+			return services;
+		}
+
+		private static IServiceCollection AddMilanoApiKeyValidation(this IServiceCollection services)
+		{
 			services.AddSingleton<FileApiKeyStore>();
+
 			services.AddSingleton(sp =>
 			{
 				var fileStore = sp.GetRequiredService<FileApiKeyStore>();
 				var cache = sp.GetRequiredService<IMemoryCache>();
 				var logger = sp.GetRequiredService<ILogger<CachedApiKeyStore>>();
+
 				return new CachedApiKeyStore(fileStore, cache, logger);
 			});
+
 			services.AddSingleton<IApiKeyStore>(sp => sp.GetRequiredService<CachedApiKeyStore>());
 			services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
 
-			// Controllers
+			return services;
+		}
+
+		private static IServiceCollection AddMilanoControllers(this IServiceCollection services)
+		{
 			services.AddControllers(options =>
 			{
 				options.Filters.Add<ApiExceptionFilter>();

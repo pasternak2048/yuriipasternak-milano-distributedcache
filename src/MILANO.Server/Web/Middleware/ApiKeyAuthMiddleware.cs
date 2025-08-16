@@ -1,6 +1,6 @@
 ﻿using MILANO.Common;
 using MILANO.Server.Application.Security;
-using MILANO.Server.Web.Context;
+using MILANO.Server.Web.Configuration;
 
 namespace MILANO.Server.Web.Middleware
 {
