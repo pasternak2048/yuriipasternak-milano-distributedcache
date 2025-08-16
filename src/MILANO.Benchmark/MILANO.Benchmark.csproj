@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MILANO.Client\MILANO.Client.csproj" />
     <ProjectReference Include="..\MILANO.Common\MILANO.Common.csproj" />
   </ItemGroup>
 
