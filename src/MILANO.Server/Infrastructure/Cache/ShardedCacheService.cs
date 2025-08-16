@@ -49,19 +49,19 @@ namespace MILANO.Server.Infrastructure.Cache
 		}
 
 		/// <inheritdoc />
-		public Task<CacheResponse> GetAsync(CacheGetRequest request)
+		public ValueTask<CacheResponse> GetAsync(CacheGetRequest request)
 			=> GetShard(request.Key).GetAsync(request);
 
 		/// <inheritdoc />
-		public Task SetAsync(CacheSetRequest request)
+		public ValueTask SetAsync(CacheSetRequest request)
 			=> GetShard(request.Key).SetAsync(request);
 
 		/// <inheritdoc />
-		public Task<bool> ExistsAsync(string key)
+		public ValueTask<bool> ExistsAsync(string key)
 			=> GetShard(key).ExistsAsync(key);
 
 		/// <inheritdoc />
-		public Task<bool> RemoveAsync(string key)
+		public ValueTask<bool> RemoveAsync(string key)
 			=> GetShard(key).RemoveAsync(key);
 
 		/// <summary>
