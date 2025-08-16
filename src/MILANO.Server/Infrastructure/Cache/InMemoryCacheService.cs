@@ -32,7 +32,7 @@ namespace MILANO.Server.Infrastructure.Cache
 		/// Retrieves a value from the cache by key if it's not expired.
 		/// If expired, removes the entry immediately.
 		/// </summary>
-		public Task<CacheResponse> GetAsync(CacheGetRequest request)
+		public ValueTask<CacheResponse> GetAsync(CacheGetRequest request)
 		{
 			var now = DateTimeOffset.UtcNow;
 
@@ -40,7 +40,7 @@ namespace MILANO.Server.Infrastructure.Cache
 			{
 				if (!entry.IsExpired(now))
 				{
-					return Task.FromResult(CacheResponse.Hit(request.Key, entry.Value));
+					return ValueTask.FromResult(CacheResponse.Hit(request.Key, entry.Value));
 				}
 				else
 				{
@@ -48,14 +48,14 @@ namespace MILANO.Server.Infrastructure.Cache
 				}
 			}
 
-			return Task.FromResult(CacheResponse.Miss(request.Key));
+			return ValueTask.FromResult(CacheResponse.Miss(request.Key));
 		}
 
 		/// <summary>
 		/// Stores or updates a key-value pair in the cache with optional expiration.
 		/// Registers the key in the expiration collection if TTL is provided.
 		/// </summary>
-		public Task SetAsync(CacheSetRequest request)
+		public ValueTask SetAsync(CacheSetRequest request)
 		{
 			if (request.Value.Length > _maxPayloadSizeBytes)
 				throw new CacheEntryTooLargeException(request.Value.Length, _maxPayloadSizeBytes);
@@ -87,30 +87,30 @@ namespace MILANO.Server.Infrastructure.Cache
 				_expiredEntries.Add(request.Key, expiration.Value.UtcDateTime);
 			}
 
-			return Task.CompletedTask;
+			return ValueTask.CompletedTask;
 		}
 
 		/// <summary>
 		/// Checks if a valid (non-expired) cache entry exists for the given key.
 		/// </summary>
-		public Task<bool> ExistsAsync(string key)
+		public ValueTask<bool> ExistsAsync(string key)
 		{
 			var now = DateTimeOffset.UtcNow;
 			var exists = _store.TryGetValue(key, out var entry) && !entry.IsExpired(now);
-			return Task.FromResult(exists);
+			return ValueTask.FromResult(exists);
 		}
 
 		/// <summary>
 		/// Removes an entry by key. If the entry is valid, decrements the internal valid counter.
 		/// </summary>
-		public Task<bool> RemoveAsync(string key)
+		public ValueTask<bool> RemoveAsync(string key)
 		{
 			var removed = _store.TryRemove(key, out var entry);
 			if (removed)
 			{
 				Interlocked.Decrement(ref _validCount);
 			}
-			return Task.FromResult(removed);
+			return ValueTask.FromResult(removed);
 		}
 
 		/// <summary>
