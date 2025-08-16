@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MILANO.Client.Configuration;
 using MILANO.Client.Interfaces;
 using MILANO.Client.Services;
+using MILANO.Common;
 
 namespace MILANO.Client.Extensions
 {
@@ -11,18 +13,19 @@ namespace MILANO.Client.Extensions
 	/// </summary>
 	public static class ServiceCollectionExtensions
 	{
+		private const string HttpClientName = "MilanoHttp";
+
 		/// <summary>
 		/// Adds and configures the MILANO cache client using strongly typed options from configuration.
 		/// Example: configuration.GetSection("MilanoClient") → MilanoClientOptions
 		/// </summary>
 		public static IServiceCollection AddMilanoCacheClient(
-		this IServiceCollection services,
-		IConfiguration configuration,
-		string sectionName = "MilanoClient")
+			this IServiceCollection services,
+			IConfiguration configuration,
+			string sectionName = "MilanoClient")
 		{
 			services.Configure<MilanoClientOptions>(configuration.GetSection(sectionName));
-
-			return services.AddMilanoCacheClient();
+			return services.AddMilanoCacheClientCore();
 		}
 
 		/// <summary>
@@ -33,21 +36,20 @@ namespace MILANO.Client.Extensions
 			Action<MilanoClientOptions> configure)
 		{
 			services.Configure(configure);
-			return services.AddMilanoCacheClient();
+			return services.AddMilanoCacheClientCore();
 		}
 
 		/// <summary>
-		/// Adds the MILANO cache client factory and client implementation.
+		/// Adds the MILANO cache client and configures HTTP client with base address, API key and timeout.
 		/// </summary>
-		private static IServiceCollection AddMilanoCacheClient(this IServiceCollection services)
+		private static IServiceCollection AddMilanoCacheClientCore(this IServiceCollection services)
 		{
-			services.AddHttpClient("MilanoHttp");
-
-			services.AddSingleton<MilanoCacheClientFactory>();
-			services.AddSingleton<IMilanoCacheClient>(sp =>
+			services.AddHttpClient<IMilanoCacheClient, HttpMilanoCacheClient>(HttpClientName, (provider, client) =>
 			{
-				var factory = sp.GetRequiredService<MilanoCacheClientFactory>();
-				return factory.Create();
+				var options = provider.GetRequiredService<IOptions<MilanoClientOptions>>().Value;
+				client.BaseAddress = new Uri(options.ServerHost);
+				client.Timeout = options.Timeout;
+				client.DefaultRequestHeaders.Add(Constants.Headers.ApiKey, options.ApiKey);
 			});
 
 			return services;

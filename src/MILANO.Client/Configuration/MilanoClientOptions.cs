@@ -1,6 +1,4 @@
-﻿using MILANO.Client.Enums;
-
-namespace MILANO.Client.Configuration
+﻿namespace MILANO.Client.Configuration
 {
 	/// <summary>
 	/// Configuration options for MILANO.Client.
@@ -18,11 +16,6 @@ namespace MILANO.Client.Configuration
 		/// This is used for simple API-level authorization.
 		/// </summary>
 		public string ApiKey { get; set; } = default!;
-
-		/// <summary>
-		/// Communication mode: either HTTP (via REST).
-		/// </summary>
-		public MilanoClientMode Mode { get; set; } = MilanoClientMode.Http;
 
 		/// <summary>
 		/// Optional request timeout. Default is 10 seconds.
