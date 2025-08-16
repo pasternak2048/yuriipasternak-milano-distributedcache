@@ -8,36 +8,38 @@ namespace MILANO.Server.Web.Extensions
 	public static class ApplicationBuilderExtensions
 	{
 		/// <summary>
-		/// Maps the API key authorization middleware to a specific path and method.
+		/// Adds API key authorization middleware to specific path + method.
 		/// </summary>
-		/// <param name="app">The application builder.</param>
-		/// <param name="path">The request path to match (e.g. "/cache").</param>
-		/// <param name="httpMethod">The HTTP method to match (e.g. "get", "post").</param>
-		/// <param name="requiredPermission">The required permission for the route.</param>
-		/// <returns>The same application builder for chaining.</returns>
 		public static IApplicationBuilder UseApiKeyAuthFor(
 			this IApplicationBuilder app,
 			PathString path,
 			string httpMethod,
 			string requiredPermission)
 		{
-			app.UseWhen( 
+			if (string.IsNullOrWhiteSpace(httpMethod))
+				throw new ArgumentException("HTTP method cannot be null or empty.", nameof(httpMethod));
+
+			if (string.IsNullOrWhiteSpace(requiredPermission))
+				throw new ArgumentException("Required permission cannot be null or empty.", nameof(requiredPermission));
+
+			app.UseWhen(
 				context =>
-				context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase) &&
-				context.Request.Method.Equals(httpMethod, StringComparison.OrdinalIgnoreCase),
+					context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase) &&
+					context.Request.Method.Equals(httpMethod, StringComparison.OrdinalIgnoreCase),
 				appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>(requiredPermission));
 
 			return app;
 		}
 
 		/// <summary>
-		/// Adds all default middleware for the MILANO distributed cache service.
+		/// Adds all required middleware for the MILANO distributed cache service.
 		/// </summary>
-		/// <param name="app">The application builder.</param>
-		/// <returns>The same application builder.</returns>
 		public static IApplicationBuilder UseMilanoMiddleware(this IApplicationBuilder app)
 		{
+			// Optional: Add global exception middleware here in the future
 			// app.UseMiddleware<ApiExceptionMiddleware>();
+
+			// Add per-endpoint API key validation
 			app.UseApiKeyAuthFor("/cache", "GET", "get");
 			app.UseApiKeyAuthFor("/cache", "POST", "set");
 

@@ -1,4 +1,6 @@
-﻿namespace MILANO.Server.Web.Extensions
+﻿using MILANO.Server.Web.Endpoints;
+
+namespace MILANO.Server.Web.Extensions
 {
 	/// <summary>
 	/// Provides extension methods for mapping endpoints.
@@ -8,10 +10,9 @@
 		/// <summary>
 		/// Maps all endpoints for the MILANO distributed cache service.
 		/// </summary>
-		/// <param name="endpoints">The endpoint route builder.</param>
 		public static void MapMilanoEndpoints(this IEndpointRouteBuilder endpoints)
 		{
-			endpoints.MapControllers();
+			endpoints.MapCacheEndpoints();
 
 			endpoints.MapGet("/health", () => Results.Ok(new
 			{

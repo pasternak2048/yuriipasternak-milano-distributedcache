@@ -1,23 +1,9 @@
 using MILANO.Server.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddMilanoDistributedCache(builder.Configuration);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.ConfigureMilanoServices();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
-
-app.UseRouting();
-app.UseMilanoMiddleware();
-
-app.MapMilanoEndpoints();
+app.ConfigureMilanoApp();
 
 app.Run();

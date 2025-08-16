@@ -1,6 +1,6 @@
 ﻿using MILANO.Server.Application.Security.Models;
 
-namespace MILANO.Server.Web.Context
+namespace MILANO.Server.Web.Configuration
 {
 	/// <summary>
 	/// Provides access to the currently authorized API key and its permissions.
