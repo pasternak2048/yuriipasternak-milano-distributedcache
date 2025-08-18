@@ -13,7 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MILANO.Server/MILANO.Server.csproj", "MILANO.Server/"]
-COPY ["MILANO.Common/MILANO.Common.csproj", "MILANO.Common/"]
+COPY ["MILANO.Shared/MILANO.Shared.csproj", "MILANO.Shared/"]
 RUN dotnet restore "./MILANO.Server/MILANO.Server.csproj"
 COPY . .
 WORKDIR "/src/MILANO.Server"
