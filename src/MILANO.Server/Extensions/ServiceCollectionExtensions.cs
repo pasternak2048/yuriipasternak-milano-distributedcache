@@ -7,11 +7,8 @@ using MILANO.Server.Infrastructure.Options;
 using MILANO.Server.Infrastructure.Security;
 using MILANO.Server.Web.Filters;
 
-namespace MILANO.Server.Web.Extensions
+namespace MILANO.Server.Extensions
 {
-	/// <summary>
-	/// Provides extension methods for registering services used by the MILANO distributed cache.
-	/// </summary>
 	public static class ServiceCollectionExtensions
 	{
 		public static IServiceCollection AddMilanoDistributedCache(this IServiceCollection services, IConfiguration configuration)
