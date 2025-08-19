@@ -1,15 +1,21 @@
 ﻿using MILANO.Server.Web.Middleware;
 
-namespace MILANO.Server.Web.Extensions
+namespace MILANO.Server.Extensions
 {
-	/// <summary>
-	/// Provides extension methods for configuring the application middleware pipeline.
-	/// </summary>
 	public static class ApplicationBuilderExtensions
 	{
-		/// <summary>
-		/// Adds API key authorization middleware to specific path + method.
-		/// </summary>
+		public static void ConfigureMilanoApp(this WebApplication app)
+		{
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			}
+
+			app.UseMilanoMiddleware();
+			app.MapMilanoEndpoints();
+		}
+
 		public static IApplicationBuilder UseApiKeyAuthFor(
 			this IApplicationBuilder app,
 			PathString path,
@@ -31,14 +37,8 @@ namespace MILANO.Server.Web.Extensions
 			return app;
 		}
 
-		/// <summary>
-		/// Adds all required middleware for the MILANO distributed cache service.
-		/// </summary>
 		public static IApplicationBuilder UseMilanoMiddleware(this IApplicationBuilder app)
 		{
-			// Optional: Add global exception middleware here in the future
-			// app.UseMiddleware<ApiExceptionMiddleware>();
-
 			// Add per-endpoint API key validation
 			app.UseApiKeyAuthFor("/cache", "GET", "get");
 			app.UseApiKeyAuthFor("/cache", "POST", "set");
