@@ -16,19 +16,6 @@ namespace MILANO.Client.Extensions
 		private const string HttpClientName = "MilanoHttp";
 
 		/// <summary>
-		/// Adds and configures the MILANO cache client using strongly typed options from configuration.
-		/// Example: configuration.GetSection("MilanoClient") → MilanoClientOptions
-		/// </summary>
-		public static IServiceCollection AddMilanoCacheClient(
-			this IServiceCollection services,
-			IConfiguration configuration,
-			string sectionName = "MilanoClient")
-		{
-			services.Configure<MilanoClientOptions>(configuration.GetSection(sectionName));
-			return services.AddMilanoCacheClientCore();
-		}
-
-		/// <summary>
 		/// Adds and configures the MILANO cache client using manual delegate configuration.
 		/// </summary>
 		public static IServiceCollection AddMilanoCacheClient(
