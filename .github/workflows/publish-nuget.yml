@@ -3,8 +3,7 @@ name: Publish MILANO NuGet
 on:
   push:
     tags:
-      - "v*.*.*"
-
+      - "*.*.*"
 permissions:
   contents: read
   packages: write
@@ -25,10 +24,21 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
       - name: Pack
         run: |
-          dotnet pack src/MILANO.Common/MILANO.Common.csproj -c Release -o ./artifacts
-          dotnet pack src/MILANO.Client/MILANO.Client.csproj -c Release -o ./artifacts
+          dotnet pack src/MILANO.Common/MILANO.Common.csproj \
+            -c Release \
+            -o ./artifacts \
+            -p:Version=${{ steps.version.outputs.VERSION }}
+
+          dotnet pack src/MILANO.Client/MILANO.Client.csproj \
+            -c Release \
+            -o ./artifacts \
+            -p:Version=${{ steps.version.outputs.VERSION }}
 
       - name: Push to GitHub Packages
         run: |
