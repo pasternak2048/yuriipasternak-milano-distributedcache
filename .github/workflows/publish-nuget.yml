@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "*.*.*"
+
 permissions:
   contents: read
   packages: write
@@ -21,8 +22,10 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore projects
+        run: |
+          dotnet restore src/MILANO.Common/MILANO.Common.csproj
+          dotnet restore src/MILANO.Client/MILANO.Client.csproj
 
       - name: Extract version from tag
         id: version
